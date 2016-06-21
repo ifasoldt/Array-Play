@@ -1,5 +1,4 @@
 #!/usr/bin/ruby
-
 movies = []
 movies << {
   title: "Forest Gump",
@@ -85,19 +84,33 @@ movie_stars = movies.collect{|k| k[:stars]}
 movie_stars.flatten!
 movie_stars.uniq!
 
-puts movie_stars.inspect
-
 movie_stars.each do |y|
   movies_by_star << {star: y, movies: movies.select {|movie| movie[:stars].include? y}.map{|x| x[:title]}}
 end
 puts movies_by_star
-
+#
 def starring?(arr, name)
   starring_movies = arr.select {|movie| movie[:stars].include? name}.map{|x| x[:title]}
 end
 
+movie_stars.each do |y|
+  movies_by_star << {star: y, movies: starring?(movies, y)}
+end
+
 puts starring?(movies, "Leonardo DiCaprio")
 
+#Epic 1.1
+puts movies_by_star
+
+#Epic 1.2
+
+average_budget = total_budget.to_f / movies.length
+puts average_budget
+
+#Epic 1.3
+budget_list = movies.collect {|k| k[:budget]}
+budget_list.sort!
+puts budget_list[(budget_list.length/2)]
 
 # movie_stars.each do |x|
 #   i = 0
@@ -116,3 +129,14 @@ puts starring?(movies, "Leonardo DiCaprio")
 
 
 # hash.merge(other_hash) { |key, oldval, newval| block }
+
+#Legendary 1 use inject(:+ )
+
+def accumulate(arr, &some_block)
+  group = arr.collect{|x| some_block.call(x)}
+  total = group.inject(:+)
+  return total
+end
+
+puts accumulate([1,2,3,4,5]) {|thing| thing * 4 }
+puts accumulate([{ phrase: "A string" }, { phrase: " is a terrible thing to taste"}]) { |thing| thing[:phrase] }
